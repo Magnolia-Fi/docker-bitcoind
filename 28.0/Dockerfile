@@ -229,6 +229,10 @@ WORKDIR /bitcoin-$VERSION/
 # Copy bitcoin source (downloaded & verified in previous stages)
 COPY  --from=preparer /bitcoin-$VERSION/  ./
 
+# Patched version of Bitcoin regtest with halving interval increased to mainnet and testnet values. Halving occurs every 210000 blocks, instead of default 150.
+# https://github.com/ulamlabs/bitcoind-custom-regtest/tree/master
+RUN sed -i 's/consensus.nSubsidyHalvingInterval = 150/consensus.nSubsidyHalvingInterval = 210000/g' src/kernel/chainparams.cpp
+
 ENV BITCOIN_PREFIX /opt/bitcoin-$VERSION
 
 RUN ./autogen.sh
